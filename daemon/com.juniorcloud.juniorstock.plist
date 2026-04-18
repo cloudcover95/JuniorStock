@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"\>
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.juniorcloud.juniorstock</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/python3</string>
+        <string>/opt/juniorstock/cli.py</string>
+        <string>engine</string>
+        <string>--hz</string>
+        <string>100</string>
+    </array>
+    
+    <key>WorkingDirectory</key>
+    <string>/opt/juniorstock</string>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/opt/juniorstock/daemon/engine.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/opt/juniorstock/daemon/engine_error.log</string>
+    
+    <key>ProcessType</key>
+    <string>Interactive</string>
+</dict>
+</plist>

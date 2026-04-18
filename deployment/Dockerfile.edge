@@ -1,0 +1,30 @@
+# juniorstock/deployment/Dockerfile.edge
+# Target: arm64 Apple Silicon | Metal Optimization
+FROM python:3.11-slim-bullseye
+
+# Set environment variables for power-constrained MLX execution
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV MLX_GPU_MEMORY_LIMIT_MB=4096 
+# Constrain memory to maintain the 45W thermal envelope
+
+WORKDIR /opt/juniorstock
+
+# Install system dependencies (no bloat)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install specific Python dependencies for Apple Silicon
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy monorepo (excluding 01_Legal and 02_Assets via .dockerignore)
+COPY . .
+
+# Expose UI Audit API Port
+EXPOSE 8000
+
+# Default entry to the WebSocket Audit server
+CMD ["uvicorn", "juniorstock.ui.dashboard_server:app", "--host", "0.0.0.0", "--port", "8000"]

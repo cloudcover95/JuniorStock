@@ -1,0 +1,22 @@
+# juniorstock/deployment/docker-compose.yml
+version: '3.8'
+
+services:
+  juniorstock_core:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.edge
+    container_name: junior_edge_node
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../pipelines/mesh_archive.parquet:/opt/juniorstock/pipelines/mesh_archive.parquet
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+        # Resource limits strictly enforced to maintain the 45W draw on M1/M4 nodes.
+
+  # Future expansion for isolated Parquet ingestion DB or local L2 Node

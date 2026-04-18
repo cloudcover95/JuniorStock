@@ -1,0 +1,15 @@
+# juniorstock/requirements.txt
+# High-density edge constraints
+mlx>=0.0.11
+numpy>=1.26.0
+pandas>=2.1.0
+pyarrow>=14.0.0
+fastapi>=0.103.1
+uvicorn>=0.23.2
+websockets>=11.0.3
+eth-account>=0.9.0
+pyserial>=3.5
+cryptography>=41.0.3
+Cython>=3.0.0
+setuptools>=68.0.0
+posix_ipc>=1.1.1

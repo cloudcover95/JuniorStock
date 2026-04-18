@@ -1,0 +1,14 @@
+# juniorstock/config/system_params.toml
+[hardware]
+target = "apple_silicon"
+compute_unit = "metal"
+power_limit_watts = 45
+
+[math_kernel]
+svd_components = 10
+atml_threshold = 0.65
+quantization = "b1.58"
+
+[storage]
+mesh_archive_path = "juniorstock/pipelines/mesh_archive.parquet"
+format = "parquet"

@@ -1,0 +1,8 @@
+# juniorstock/.dockerignore
+# Absolute directive: System packers must never ingest from these paths.
+01_Legal/
+02_Assets/
+.git/
+__pycache__/
+*.pyc
+.env
