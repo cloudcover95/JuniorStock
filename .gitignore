@@ -1,6 +1,7 @@
+scripts/junior_venv/
 __pycache__/
 *.pyc
 .DS_Store
-01_Legal/
-02_Assets/
-scripts/junior_venv/
+dist/
+build/
+*.egg-info/

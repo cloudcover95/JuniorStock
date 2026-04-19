@@ -1,14 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "JuniorAGI"
+name = "juniorstock"
 version = "0.1.0"
-description = "PhysioManifold-AGI Sovereign OS"
+description = "Sovereign Web3 & Quant Edge Engine for Apple Silicon"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "mlx==0.29.3",
-    "giotto-tda==0.6.0",
-    "numpy==2.0.2",
-    "polars==1.36.1",
+    "mlx-lm==0.29.1",
     "fastapi==0.128.8",
-    "pydantic==2.13.2",
-    "websockets==15.0.1"
+    "websockets==15.0.1",
+    "uvicorn==0.39.0",
+    "numpy==2.0.2",
+    "polars==1.36.1"
 ]
+
+[project.optional-dependencies]
+dev = ["pytest", "build", "twine"]
+
+[project.scripts]
+juniorstock-node = "juniorstock.ui.server:start_node"
