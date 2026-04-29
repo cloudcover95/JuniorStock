@@ -1,0 +1,42 @@
+Metadata-Version: 2.4
+Name: juniorstock
+Version: 0.1.0
+Summary: Sovereign Web3 & Quant Edge Engine for Apple Silicon
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mlx==0.29.3
+Requires-Dist: mlx-lm==0.29.1
+Requires-Dist: fastapi==0.128.8
+Requires-Dist: websockets==15.0.1
+Requires-Dist: uvicorn==0.39.0
+Requires-Dist: numpy==2.0.2
+Requires-Dist: polars==1.36.1
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: build; extra == "dev"
+Requires-Dist: twine; extra == "dev"
+Dynamic: license-file
+
+# JuniorAGI // The PhysioManifold Architecture
+
+System Acknowledgment: Directives confirmed. The production-grade SDK suite is formalized as JuniorAGI, operating within the JuniorHome monorepo. 
+
+## I. Architecture Overview
+The architecture strictly integrates the web3node math inference engine to handle base hardware acceleration. 
+* tda_svd_core: Unified TDA + SVD primitives.
+* manifold_geometry: Differential geometry and Ricci-flow.
+* physics_principles: Computational differentiable constraints.
+* recursive_feedback: Active inference / Free-energy loops.
+* inference_engine: Interstellar-scale sparse tensor routing.
+* agi_primitives: Self-reflective state scaffolds.
+
+## II. Physics-First Mapping
+* Free-Energy Principle: Recursive Active Inference Loop
+* Thermodynamics (Entropy): Dimensional Collapse via SVD (H = -sum(sigma_i * ln(sigma_i)))
+* General Relativity: Riemannian Geodesic Transport (Curvature metric g_uv)
+* Noether's Theorem: Topological Invariant Preservation (Betti number constancy)
+* Conservation of Energy: Bounded Manifold Curvature (L2 Regularization on Sigma)
+
+## III. Prohibited Execution
+Air-gapped isolation maintained for 01_Legal and 02_Assets. Zero cloud dependencies.

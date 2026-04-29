@@ -1,0 +1,2 @@
+[console_scripts]
+juniorstock-node = juniorstock.ui.server:start_node

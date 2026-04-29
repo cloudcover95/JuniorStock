@@ -1,7 +1,8 @@
-scripts/junior_venv/
+vault/
 __pycache__/
-*.pyc
+*.parquet
+*.env
 .DS_Store
-dist/
-build/
-*.egg-info/
+scripts/junior_venv/
+venv/
+.env/
