@@ -1,15 +1,15 @@
 # path: src/juniorstock/engines/swarm/__init__.py
 #!/usr/bin/env python3
 """
-JuniorStock Swarm / Multi-Agent Consensus Package (V5.5 / V6.1)
+JuniorStock Swarm Package (V6.2)
 
-Exposes the deterministic, math-first trading agent graph with MLX support.
+Includes BitNet-MLX bridge, daemon, and supporting production features.
 """
 
 from .consensus_graph import JCSwarmOrchestrator
 try:
-    from .trading_agents import ConsensusOrchestrator as MLXConsensusOrchestrator
+    from .bitnet_bridge import BitNetCognitiveBridge
 except ImportError:
-    MLXConsensusOrchestrator = None
+    BitNetCognitiveBridge = None
 
-__all__ = ["JCSwarmOrchestrator", "MLXConsensusOrchestrator"]
+__all__ = ["JCSwarmOrchestrator", "BitNetCognitiveBridge"]
