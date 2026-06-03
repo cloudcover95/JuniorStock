@@ -1,8 +1,1 @@
-vault/
-__pycache__/
-*.parquet
-*.env
-.DS_Store
-scripts/junior_venv/
-venv/
-.env/
+gitignore content
