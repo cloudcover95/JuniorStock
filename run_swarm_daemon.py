@@ -1,9 +1,10 @@
 # path: run_swarm_daemon.py
 #!/usr/bin/env python3
 """
-V6.4: Production Swarm Daemon with SovereignExecutionBus integration.
+V6.4 Production Swarm Daemon with efficient batched execution bus.
 """
 
+import atexit
 import logging
 import time
 from typing import List
@@ -24,7 +25,14 @@ logging.basicConfig(level=logging.INFO, format="[*] %(asctime)s - %(message)s")
 
 
 class SwarmDaemon:
-    def __init__(self, tickers: List[str], poll_rate: int = 60, vault_root: str = None):
+    def __init__(
+        self,
+        tickers: List[str],
+        poll_rate: int = 60,
+        vault_root: str = None,
+        execution_batch_size: int = 50,
+        execution_flush_interval: float = 30.0,
+    ):
         self.tickers = tickers
         self.poll_rate = poll_rate
 
@@ -33,7 +41,15 @@ class SwarmDaemon:
             hitl=False
         )
         self.cognitive_bridge = BitNetCognitiveBridge(vault_root=vault_root)
-        self.execution_bus = SovereignExecutionBus(workspace_root=vault_root)
+
+        self.execution_bus = SovereignExecutionBus(
+            workspace_root=vault_root,
+            batch_size=execution_batch_size,
+            flush_interval_seconds=execution_flush_interval,
+        )
+
+        # Ensure buffer is flushed on exit
+        atexit.register(self.execution_bus.flush)
 
     def _fetch_live_tensor(self, ticker: str) -> dict:
         import numpy as np
@@ -48,11 +64,11 @@ class SwarmDaemon:
             "pe_ratio": np.random.uniform(10.0, 40.0),
             "peg_ratio": np.random.uniform(0.5, 2.5),
             "order_imbalance": np.random.uniform(-1.0, 1.0),
-            "identity_drift": np.random.uniform(0.01, 0.15)
+            "identity_drift": np.random.uniform(0.01, 0.15),
         }
 
     def run_forever(self):
-        logging.info(f"[⚡] Swarm Daemon V6.4 Ignited. Tracking: {self.tickers}")
+        logging.info(f"[⚡] Swarm Daemon V6.4 (batched writes) ignited. Tracking: {self.tickers}")
         cycle = 0
         while True:
             try:
@@ -69,13 +85,10 @@ class SwarmDaemon:
                     consensus = self.swarm.debate_loop.process_consensus([f_res, t_res, s_res])
                     risk = self.swarm.risk_manager.audit_proposal(consensus, context)
 
-                    # Cognitive Bridge (Obsidian logging)
                     if consensus["action_proposal"] != "HOLD":
                         self.cognitive_bridge.generate_debate_log(ticker, consensus, context)
 
-                    # Execution Gate + SovereignExecutionBus
                     if self.swarm.execution_gate.route_to_hardware(ticker, risk, consensus):
-                        # Route through the new low-latency execution bus
                         receipt = self.execution_bus.process_execution_payload(ticker, consensus, risk)
                         logging.info(f"[BUS] {ticker} → {receipt.get('status', 'EXECUTED')}")
 
@@ -83,6 +96,7 @@ class SwarmDaemon:
 
             except KeyboardInterrupt:
                 logging.info("[!] Daemon terminated by user.")
+                self.execution_bus.flush()
                 break
             except Exception as e:
                 logging.error(f"[!] Daemon error: {e}")
@@ -91,5 +105,10 @@ class SwarmDaemon:
 
 if __name__ == "__main__":
     TARGETS = ["BTC-USD", "SOL-USD", "TSLA"]
-    daemon = SwarmDaemon(tickers=TARGETS, poll_rate=15)
+    daemon = SwarmDaemon(
+        tickers=TARGETS,
+        poll_rate=15,
+        execution_batch_size=50,
+        execution_flush_interval=30.0,
+    )
     daemon.run_forever()
