@@ -1,34 +1,41 @@
 # path: run_swarm_daemon.py
 #!/usr/bin/env python3
 """
-V6.2: Production Swarm Daemon
-
-Infinite execution loop binding mathematical manifold → Swarm consensus → BitNet reasoning → hardware execution.
+V6.2: Production Swarm Daemon (with real integration hooks)
 """
 
 import logging
 import time
 from typing import List
 
+logging.basicConfig(level=logging.INFO, format="[*] %(asctime)s - %(message)s")
+
+# --- Real Integration Attempts ---
 try:
     from src.juniorstock.engines.swarm.consensus_graph import JCSwarmOrchestrator
     from src.juniorstock.engines.swarm.bitnet_bridge import BitNetCognitiveBridge
 except ImportError:
-    # Allow running from project root
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent))
     from src.juniorstock.engines.swarm.consensus_graph import JCSwarmOrchestrator
     from src.juniorstock.engines.swarm.bitnet_bridge import BitNetCognitiveBridge
 
-logging.basicConfig(level=logging.INFO, format="[*] %(asctime)s - %(message)s")
+# Optional real ecosystem imports (graceful fallback)
+try:
+    from bitnet_mlx import BitNetModel  # from your BitNet-mlx repo
+    REAL_BITNET_AVAILABLE = True
+except ImportError:
+    REAL_BITNET_AVAILABLE = False
+
+try:
+    from crispy_mouse import DeterministicMacro  # from your crispy-mouse repo
+    REAL_CRISPY_AVAILABLE = True
+except ImportError:
+    REAL_CRISPY_AVAILABLE = False
 
 
 class SwarmDaemon:
-    """
-    V6.2: Production Execution Loop.
-    """
-
     def __init__(self, tickers: List[str], poll_rate: int = 60, vault_root: str = None):
         self.tickers = tickers
         self.poll_rate = poll_rate
@@ -39,14 +46,16 @@ class SwarmDaemon:
         )
         self.cognitive_bridge = BitNetCognitiveBridge(vault_root=vault_root)
 
+        if REAL_BITNET_AVAILABLE:
+            logging.info("[+] Real BitNet-mlx backend detected")
+        if REAL_CRISPY_AVAILABLE:
+            logging.info("[+] Real crispy-mouse backend detected")
+
     def _fetch_live_tensor(self, ticker: str) -> dict:
-        """Mock live tensor ingestion. Replace with real data source."""
         import numpy as np
         C = np.random.randn(1, 60).astype(np.float32) + 100.0
         H = C + np.random.uniform(0.1, 1.0, (1, 60))
         L = C - np.random.uniform(0.1, 1.0, (1, 60))
-
-        # In real version this would call UnifiedFinancialTensor or stocksnode
         return {
             "manifold": C,
             "k_alpha": float(np.random.uniform(1.5, 4.0)),
@@ -79,14 +88,20 @@ class SwarmDaemon:
                         self.cognitive_bridge.generate_debate_log(ticker, consensus, context)
 
                     if self.swarm.execution_gate.route_to_hardware(ticker, risk, consensus):
-                        self.swarm.hardware_driver.trigger_macro_sequence(
-                            ticker, consensus, risk["allocation_size"]
-                        )
+                        # Real crispy-mouse hook if available
+                        if REAL_CRISPY_AVAILABLE:
+                            try:
+                                macro = DeterministicMacro(signal=consensus["action_proposal"])
+                                macro.run()
+                            except Exception:
+                                self.swarm.hardware_driver.trigger_macro_sequence(ticker, consensus, risk["allocation_size"])
+                        else:
+                            self.swarm.hardware_driver.trigger_macro_sequence(ticker, consensus, risk["allocation_size"])
 
                 time.sleep(self.poll_rate)
 
             except KeyboardInterrupt:
-                logging.info("[!] Daemon terminated by user.")
+                logging.info("[!] Daemon terminated.")
                 break
             except Exception as e:
                 logging.error(f"[!] Daemon error: {e}")

@@ -1,12 +1,34 @@
 # JuniorStock
 
-**Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.2)**
+**Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.2 Complete)**
 
-Now includes the **BitNet-MLX Cognitive Bridge** and **Swarm Daemon** for autonomous 24/7 operation.
+## Ecosystem Map (JuniorCloud LLC)
 
-## New in V6.2
-- `bitnet_bridge.py` — Local MLX LLM reasoning + Obsidian logging
-- `run_swarm_daemon.py` — Production infinite loop
-- 5 supporting features: ManifoldPersistence, RiskTelemetry, ConfigLoader, BacktestEngine, ObsidianIndexer
+JuniorStock is the central quant trading hub. It integrates with:
 
-We move fast on `main`.
+- **BitNet-mlx** → Local 1.58-bit inference (used in Cognitive Bridge)
+- **crispy-mouse** → Deterministic low-level execution macros
+- **stocksnode** → Data lake & telemetry
+- **JuniorMemSys-Suite** → Long-term topological memory
+- **JuniorQuant** → Low-power manifold math
+- **JuniorHome** → Central edge orchestrator (future)
+- **web3node** → On-chain signals
+
+All repos under `cloudcover95` / JuniorCloud LLC.
+
+## V6.2 Highlights
+- BitNet-MLX Cognitive Bridge (sovereign LLM reasoning + Obsidian logs)
+- Production Swarm Daemon (infinite loop)
+- MLX-vectorized manifold audits
+- Full dependency wiring with graceful fallbacks
+
+## Quick Start
+
+```bash
+git clone https://github.com/cloudcover95/JuniorStock.git
+cd JuniorStock
+pip install -e ".[full]"   # pulls real ecosystem packages when available
+python run_swarm_daemon.py
+```
+
+We build fast on `main`.

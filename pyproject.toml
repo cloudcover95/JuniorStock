@@ -14,6 +14,14 @@ dependencies = [
 [project.optional-dependencies]
 mlx = ["mlx", "mlx-lm"]
 cluster = ["ray[default]>=2.10"]
+# Real JuniorCloud ecosystem packages (install from sibling repos or PyPI when published)
+full = [
+    "bitnet-mlx",
+    "crispy-mouse",
+    "junior-memsys",
+    "junior-quant",
+]
 
 [project.scripts]
 juniorstock = "src.juniorstock.engine.orchestrator:main"
+juniorstock-daemon = "run_swarm_daemon:main"
