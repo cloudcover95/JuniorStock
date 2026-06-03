@@ -1,15 +1,15 @@
 # JuniorStock
 
-**Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.3)**
+**Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.4)**
 
-## Blackbox Integration (V1.0)
+## V6.4: SovereignExecutionBus
 
-JuniorStock can now consume the isolated **BitNet-mlx Proprietary Blackbox**:
+New low-latency backend execution port:
 
-- Run the blackbox: `python run_offline_blackbox.py` (in BitNet-mlx repo)
-- It listens on `http://127.0.0.1:8001`
-- Use `BitNetBlackboxClient` for air-gapped inference
+- Friction evaluation (tax drag, slippage)
+- Unix Domain Socket dispatch to `crispy-mouse`
+- Monthly Parquet telemetry ledgers
 
-This maintains strict separation between high-level orchestration and low-level proprietary math.
+Fully integrated into the main `SwarmDaemon` loop.
 
-All work on `main`.
+All work consolidated on `main`.

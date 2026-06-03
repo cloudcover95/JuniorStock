@@ -1,38 +1,26 @@
 # path: run_swarm_daemon.py
 #!/usr/bin/env python3
 """
-V6.2: Production Swarm Daemon (with real integration hooks)
+V6.4: Production Swarm Daemon with SovereignExecutionBus integration.
 """
 
 import logging
 import time
 from typing import List
 
-logging.basicConfig(level=logging.INFO, format="[*] %(asctime)s - %(message)s")
-
-# --- Real Integration Attempts ---
 try:
     from src.juniorstock.engines.swarm.consensus_graph import JCSwarmOrchestrator
     from src.juniorstock.engines.swarm.bitnet_bridge import BitNetCognitiveBridge
+    from src.juniorstock.engines.swarm.execution_bus import SovereignExecutionBus
 except ImportError:
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent))
     from src.juniorstock.engines.swarm.consensus_graph import JCSwarmOrchestrator
     from src.juniorstock.engines.swarm.bitnet_bridge import BitNetCognitiveBridge
+    from src.juniorstock.engines.swarm.execution_bus import SovereignExecutionBus
 
-# Optional real ecosystem imports (graceful fallback)
-try:
-    from bitnet_mlx import BitNetModel  # from your BitNet-mlx repo
-    REAL_BITNET_AVAILABLE = True
-except ImportError:
-    REAL_BITNET_AVAILABLE = False
-
-try:
-    from crispy_mouse import DeterministicMacro  # from your crispy-mouse repo
-    REAL_CRISPY_AVAILABLE = True
-except ImportError:
-    REAL_CRISPY_AVAILABLE = False
+logging.basicConfig(level=logging.INFO, format="[*] %(asctime)s - %(message)s")
 
 
 class SwarmDaemon:
@@ -45,17 +33,14 @@ class SwarmDaemon:
             hitl=False
         )
         self.cognitive_bridge = BitNetCognitiveBridge(vault_root=vault_root)
-
-        if REAL_BITNET_AVAILABLE:
-            logging.info("[+] Real BitNet-mlx backend detected")
-        if REAL_CRISPY_AVAILABLE:
-            logging.info("[+] Real crispy-mouse backend detected")
+        self.execution_bus = SovereignExecutionBus(workspace_root=vault_root)
 
     def _fetch_live_tensor(self, ticker: str) -> dict:
         import numpy as np
         C = np.random.randn(1, 60).astype(np.float32) + 100.0
         H = C + np.random.uniform(0.1, 1.0, (1, 60))
         L = C - np.random.uniform(0.1, 1.0, (1, 60))
+
         return {
             "manifold": C,
             "k_alpha": float(np.random.uniform(1.5, 4.0)),
@@ -67,7 +52,7 @@ class SwarmDaemon:
         }
 
     def run_forever(self):
-        logging.info(f"[⚡] Swarm Daemon Ignited. Tracking: {self.tickers}")
+        logging.info(f"[⚡] Swarm Daemon V6.4 Ignited. Tracking: {self.tickers}")
         cycle = 0
         while True:
             try:
@@ -84,24 +69,20 @@ class SwarmDaemon:
                     consensus = self.swarm.debate_loop.process_consensus([f_res, t_res, s_res])
                     risk = self.swarm.risk_manager.audit_proposal(consensus, context)
 
+                    # Cognitive Bridge (Obsidian logging)
                     if consensus["action_proposal"] != "HOLD":
                         self.cognitive_bridge.generate_debate_log(ticker, consensus, context)
 
+                    # Execution Gate + SovereignExecutionBus
                     if self.swarm.execution_gate.route_to_hardware(ticker, risk, consensus):
-                        # Real crispy-mouse hook if available
-                        if REAL_CRISPY_AVAILABLE:
-                            try:
-                                macro = DeterministicMacro(signal=consensus["action_proposal"])
-                                macro.run()
-                            except Exception:
-                                self.swarm.hardware_driver.trigger_macro_sequence(ticker, consensus, risk["allocation_size"])
-                        else:
-                            self.swarm.hardware_driver.trigger_macro_sequence(ticker, consensus, risk["allocation_size"])
+                        # Route through the new low-latency execution bus
+                        receipt = self.execution_bus.process_execution_payload(ticker, consensus, risk)
+                        logging.info(f"[BUS] {ticker} → {receipt.get('status', 'EXECUTED')}")
 
                 time.sleep(self.poll_rate)
 
             except KeyboardInterrupt:
-                logging.info("[!] Daemon terminated.")
+                logging.info("[!] Daemon terminated by user.")
                 break
             except Exception as e:
                 logging.error(f"[!] Daemon error: {e}")
