@@ -1,1 +1,19 @@
-full pyproject
+[project]
+name = "juniorstock"
+version = "0.2.0"
+description = "Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+dependencies = [
+    "langgraph>=0.2",
+    "numpy",
+    "pyarrow",
+]
+
+[project.optional-dependencies]
+mlx = ["mlx", "mlx-lm"]
+cluster = ["ray[default]>=2.10"]
+
+[project.scripts]
+juniorstock = "src.juniorstock.engine.orchestrator:main"
