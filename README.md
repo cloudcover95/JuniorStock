@@ -2,20 +2,14 @@
 
 **Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.3)**
 
-Production-grade SDK with deterministic CI/CD, hardened packaging, and full test matrix.
+## Blackbox Integration (V1.0)
 
-## V6.3 Production Hardening
-- GitHub Actions CI (Python 3.9 deterministic runner)
-- Makefile for consistent developer experience
-- Hardened pyproject.toml with hatchling + proper extras
-- PyTest matrix for K_α / manifold integrity
+JuniorStock can now consume the isolated **BitNet-mlx Proprietary Blackbox**:
 
-## Quick Start (Production)
+- Run the blackbox: `python run_offline_blackbox.py` (in BitNet-mlx repo)
+- It listens on `http://127.0.0.1:8001`
+- Use `BitNetBlackboxClient` for air-gapped inference
 
-```bash
-make install
-make test
-make lint
-```
+This maintains strict separation between high-level orchestration and low-level proprietary math.
 
-All work consolidated on `main`.
+All work on `main`.
