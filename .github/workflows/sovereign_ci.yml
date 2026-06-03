@@ -1,0 +1,48 @@
+# path: .github/workflows/sovereign_ci.yml
+name: JuniorStock Sovereign CI
+
+on:
+  push:
+    branches: [ main, agent_sandbox/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install Enterprise Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[dev]
+
+    - name: L0/L1 Package Validation
+      run: |
+        if [ -f scripts/validate_package.sh ]; then
+          chmod +x scripts/validate_package.sh
+          ./scripts/validate_package.sh
+        else
+          echo "No validate_package.sh found - skipping"
+        fi
+
+    - name: L2 Linting (Ruff)
+      run: |
+        pip install ruff
+        ruff check src/ tests/
+
+    - name: L3 Matrix Integrity Tests (Pytest)
+      run: |
+        pip install pytest
+        pytest tests/ -v --tb=short

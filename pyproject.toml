@@ -1,27 +1,42 @@
+# path: pyproject.toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "juniorstock"
-version = "0.2.0"
-description = "Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator"
+version = "6.3.0"
+description = "Sovereign Quant Trading SDK & KPZ Tensor Engine"
+authors = [{name = "JuniorCloud LLC"}]
 readme = "README.md"
-license = {text = "Apache-2.0"}
 requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+
 dependencies = [
-    "langgraph>=0.2",
-    "numpy",
-    "pyarrow",
+    "numpy>=1.26.0,<2.0.0",
+    "pandas>=2.2.0",
+    "pyarrow>=15.0.0",
+    "pydantic>=2.0.0",
+    "tomli>=2.0.0; python_version < '3.11'"
 ]
 
 [project.optional-dependencies]
-mlx = ["mlx", "mlx-lm"]
-cluster = ["ray[default]>=2.10"]
-# Real JuniorCloud ecosystem packages (install from sibling repos or PyPI when published)
+apple_silicon = [
+    "mlx>=0.10.0",
+    "mlx-lm>=0.1.0"
+]
+hardware = [
+    "pyserial"
+]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.3.0",
+    "build>=1.1.1"
+]
 full = [
     "bitnet-mlx",
-    "crispy-mouse",
-    "junior-memsys",
-    "junior-quant",
+    "crispy-mouse"
 ]
 
-[project.scripts]
-juniorstock = "src.juniorstock.engine.orchestrator:main"
-juniorstock-daemon = "run_swarm_daemon:main"
+[tool.hatch.build.targets.wheel]
+packages = ["src/juniorstock"]
