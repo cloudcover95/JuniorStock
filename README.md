@@ -1,15 +1,8 @@
 # JuniorStock
 
-**Sovereign Edge-Native Multi-Agent Quantitative Trading Orchestrator (V6.4)**
+Updated with new architecture:
+- BackendRouter for hardware-agnostic (MLX + CUDA) execution
+- TernarySpatialManifold for physics-informed quant workflows
+- Integration with BitNet 1.58 kernels
 
-## V6.4: SovereignExecutionBus
-
-New low-latency backend execution port:
-
-- Friction evaluation (tax drag, slippage)
-- Unix Domain Socket dispatch to `crispy-mouse`
-- Monthly Parquet telemetry ledgers
-
-Fully integrated into the main `SwarmDaemon` loop.
-
-All work consolidated on `main`.
+See src/ for current implementation.
